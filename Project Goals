@@ -1,0 +1,32 @@
+Enigma Machine - Project Goals and initial consideration.
+
+Create a software encryption program that encrypts text messages in a manner based on the World War 2 German 'Enigma' machine.
+
+Many documents here will assume at least a base level knowledge of the construction of the enigma machine.
+
+The software will perform the following tasks.
+
+Read a file of encryptable data in the form of a .txt file, using the ASCII character encoding standard.
+Generate encoding 'rotors' from a specified number of passwords.
+Parse the data character by character and apply an encryption cypher in a manner similar to the enigma machine
+Write data out to a new .txt file in the same folder.
+
+
+Initial considerations
+
+ASCII contains provision for certain non-printable characters, given that the data will be coming from a text file, it is likely
+that these can largely be ignored by the parser and simply passed on to the output without attempting to apply encryption.
+The parser module should be built in a manner to allow exceptional cases to be specified, however.
+
+For the purpose of this exercise, 'randomness quality' will not be considered when generating cypher rotors from passwords.
+A basic heuristic for generating these will suffice. In the future this could be expanded to make for better quality encryption.
+
+The initial setup of the machine for each message was performed by sending three unencrypted letters to specify the initial rotor
+positions followed by three encrypted letters to begin the scrambling process. These were considered as separate to the body of
+the message itself. Since this amounts to an extra password, the initial rotor positions will be specified by an additional
+optional password. If omitted, initial positions will be assumed to be at a zero offset.
+
+For the sake of authenticity, I will include the initial fixed 'scramble' of letters from the keyboard into the first cypher and
+an arbitrary 'reflector' module which cycles the signal back through the rotors in reverse although. Both of these modules in the
+real enigma machine function like a fixed rotor. There is no reason to not reuse the rotor generation code for these with fixed
+passwords for now.
