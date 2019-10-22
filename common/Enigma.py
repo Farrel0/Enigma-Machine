@@ -7,11 +7,6 @@ upperBound = 127
 characterRange = upperBound - lowerBound
 
 
-def mydebug(message):
-    if debug == 1:
-        print(message)
-
-
 class Enigma:
 
     def __init__(self, keys, initialOffsets, size=95):
@@ -53,10 +48,8 @@ class Enigma:
             return wirenumber + 1
 
     def connect(self, wireNumber):
-        mydebug("Signal received on wire " + str(wireNumber) + " with offset " + str(self.myOffset))
         outbound = (self.myCypherArray[(wireNumber + self.myOffset) % self.characterRange][
                         0] - self.myOffset) % self.characterRange
-        mydebug("Signal outbound to case " + str(outbound))
         if self.internalEnigmaMachine:
             inbound = self.internalEnigmaMachine.connect(outbound)
         else:
@@ -75,7 +68,6 @@ class Enigma:
         encodedLetter = letter
 
         if lowerBound <= ord(letter) < upperBound:
-            mydebug("Calling connect with a " + chr(ord(letter)) + " on wire " + str((ord(letter) - lowerBound)))
             encodedLetter = chr(self.connect(ord(letter) - lowerBound) + lowerBound)
             self.increment()
 
@@ -85,7 +77,6 @@ class Enigma:
         toEncode = message
         encodedMessage = ""
         while len(toEncode) > 0:
-            mydebug("Calling encode letter with " + toEncode[0])
             encodedMessage = encodedMessage + self.encodeLetter(toEncode[0])
             toEncode = toEncode[1:]
         return encodedMessage

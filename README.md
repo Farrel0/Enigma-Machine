@@ -22,4 +22,8 @@ Being written
 
 ##Usage
 
-TBC
+construct an enigma object with two arguments. Note: the lists must be of equal length.
+passwords = A list of strings each of which will generate cypher rotors
+offsets = A list of integers which determine the initial position of each of the rotors
+
+Call the encodeMessage(string) -> string method with the message to encode
