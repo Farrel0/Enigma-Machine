@@ -31,21 +31,27 @@ class Enigma:
             self.myCypherArray[i][0] = nextLink
             self.myCypherArray[nextLink][1] = i
 
-        # Choose an arbitrary point as a latch point
         self.myLatchPoint = (ord(self.mykey[0])^2) % self.characterRange
 
-        # if there is more than one key in the input set, create an internal enigma machine
         if len(keys) > 1:
             self.internalEnigmaMachine = Enigma(keys[1:], initialOffsets[1:], size)
 
-    def reflectSignal(self, wirenumber):
+    def encodeMessage(self, message):
+        toEncode = message
+        encodedMessage = ""
+        while len(toEncode) > 0:
+            encodedMessage = encodedMessage + self.encodeLetter(toEncode[0])
+            toEncode = toEncode[1:]
+        return encodedMessage
 
-        if wirenumber == 0:
-            return 0
-        elif (wirenumber % 2) == 0:
-            return wirenumber - 1
-        else:
-            return wirenumber + 1
+    def encodeLetter(self, letter):
+        encodedLetter = letter
+
+        if lowerBound <= ord(letter) < upperBound:
+            encodedLetter = chr(self.connect(ord(letter) - lowerBound) + lowerBound)
+            self.increment()
+
+        return encodedLetter
 
     def connect(self, wireNumber):
         outbound = (self.myCypherArray[(wireNumber + self.myOffset) % self.characterRange][
@@ -57,6 +63,15 @@ class Enigma:
         return (self.myCypherArray[(inbound + self.myOffset) % self.characterRange][
                     1] - self.myOffset) % self.characterRange
 
+    def reflectSignal(self, wirenumber):
+
+        if wirenumber == 0:
+            return 0
+        elif (wirenumber % 2) == 0:
+            return wirenumber - 1
+        else:
+            return wirenumber + 1
+
     def increment(self):
         if not self.internalEnigmaMachine:
             self.myOffset = (self.myOffset + 1) % self.characterRange
@@ -64,22 +79,6 @@ class Enigma:
             self.myOffset = (self.myOffset + self.internalEnigmaMachine.increment()) % self.characterRange
         return self.myOffset == self.myLatchPoint
 
-    def encodeLetter(self, letter):
-        encodedLetter = letter
-
-        if lowerBound <= ord(letter) < upperBound:
-            encodedLetter = chr(self.connect(ord(letter) - lowerBound) + lowerBound)
-            self.increment()
-
-        return encodedLetter
-
-    def encodeMessage(self, message):
-        toEncode = message
-        encodedMessage = ""
-        while len(toEncode) > 0:
-            encodedMessage = encodedMessage + self.encodeLetter(toEncode[0])
-            toEncode = toEncode[1:]
-        return encodedMessage
 
 
 # Check existence of data files needed.
